@@ -176,6 +176,22 @@ async def accept(ctx, botid):
 async def accept_error(ctx, error):
   if isinstance(error, MissingRole):
     await ctx.reply("You cannot execute this command. You need Bot reviewers role to execute this command.")
+    
+@client.event
+async def on_user_update(before, after):
+  guild = client.get_guild(945254273640443904)
+  role = guild.get_role(945384569077645373)
+  if role:
+    if str(before.status) == "online":
+      if str(after.status) == "offline":
+        channel = client.get_channel(945617743531638794)
+        embed = discord.Embed(title="Bot offline", description="The bot went offline", color=discord.Color.red())
+        await channel.send(embed=embed)
+    if str(before.status) == "offline":
+      if str(after.status) == "online":
+        channel = client.get_channel(945617743531638794)
+        embed = discord.Embed(title="Bot back Online", description="The bot is online again", color=discord.Color.green())
+        await channel.send(embed=embed)
 
 @client.slash_command()
 @commands.has_any_role("Staff")
